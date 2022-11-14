@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Concert+One&family=Press+Start+2P&display=swap');
+body{
+    margin: 0;
+    padding: 0;
+}
+article{
+    text-align: center; font-family: 'Press Start 2P', cursive;
+}
+.sec2{
+    background-color: #9bfab0; display: flex; justify-content: center; align-items: center; font-size: 40px; font-family: 'Concert One', cursive;
+}
+.icons{
+    margin: 10px
+}
+.texto{
+    margin-left: 5px; margin-right: 10px;
+}
+#valores{
+    margin-right: 60px;
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Concert+One&family=Press+Start+2P&display=swap');
+    </style>
+</head>
+<body style="margin: 0; padding: 0;">
+    <article style='text-align: center; font-family: 'Press Start 2P', cursive;">
+        <h1>CEILAB WEB SERVER</h1>
+        <h2>Calidad del aire</h2>
+    </article>
+    <section class="1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#9bfab0" fill-opacity="1" d="M0,32L48,42.7C96,53,192,75,288,117.3C384,160,480,224,576,224C672,224,768,160,864,138.7C960,117,1056,139,1152,149.3C1248,160,1344,160,1392,160L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>
+
+    </section>
+    <section class="sec2" style="background-color: #9bfab0; display: flex; justify-content: center; align-items: center; font-size: 40px; font-family: 'Concert One', cursive;">
+        <span class="icons" style="margin: 10px";>🌡️</span>  
+        <span class="texto" style="margin-left: 5px; margin-right: 10px;">Temperatura: </span> 
+        <span id="valores" style="margin-right: 60px;">1</span>
+        <span class="icons" style="margin: 10px">💧</span>  
+        <span class="texto" style="margin-left: 5px; margin-right: 10px;">Humedad: </span>    
+         <span id="valores" style="margin-right: 60px;">2</span>
+        <span class="icons"  class="icons"="margin: 10px">☣️ </span>  
+        <span class="texto" style="margin-left: 5px; margin-right: 10px;">Calidad del aire: </span> 
+        <span id="valores" class="valor" style="margin-right: 60px;">100</span> <span>👍</span> 
+    </section>
+    <section class="3">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#9bfab0" fill-opacity="1" d="M0,32L48,42.7C96,53,192,75,288,117.3C384,160,480,224,576,224C672,224,768,160,864,138.7C960,117,1056,139,1152,149.3C1248,160,1344,160,1392,160L1440,160L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path></svg>
+
+    </section>
+
+    <script>
+        var val = document.querySelector('.valor');
+        function check (){
+            let valor = parseInt(val.textContent);
+            console.log(valor)
+        if (valor >= 500 ) {
+            document.body.innerHTML = document.body.innerHTML.replace("👍", "👎");
+        } else if (valor <= 499){
+            document.body.innerHTML = document.body.innerHTML.replace("👎","👍");
+        }
+        }
+        setInterval(check, 1000);
+    
+    </script>
+
+</body>
+</html>
