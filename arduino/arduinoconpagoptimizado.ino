@@ -1,0 +1,142 @@
+
+#include <SPI.h>
+#include <Ethernet.h>
+#include <Adafruit_Sensor.h>
+#include <DHT.h>
+ 
+#define DHTPIN     7     // pin digital conectado al sensor DHT.
+#define DHTTYPE    DHT22 // tipo de sensor DHT
+ 
+byte mac[] = {0x90, 0xA2, 0xDA, 0x0D, 0xA0, 0x88};
+ 
+IPAddress ip(192,168,13,180);
+ 
+EthernetServer server = EthernetServer(8080);
+ 
+const int aqsensor = A0;
+DHT dht(DHTPIN, DHTTYPE);
+float temperature, humidity;
+int aire;
+long last_read = 0;
+  
+void setup() {
+ 
+  pinMode(aqsensor,INPUT);
+
+  dht.begin();
+ 
+  Serial.begin(9600);
+ 
+  Ethernet.begin(mac, ip);
+ 
+  if (Ethernet.hardwareStatus() == EthernetNoHardware) {
+    Serial.println("Ethernet shield no presente :(");
+    while (true) {
+      delay(1); 
+    }
+  }
+ 
+  if (Ethernet.linkStatus() == LinkOFF) {
+    Serial.println("El cable Ethernet no está conectado o está defectuoso.");
+  }
+ 
+  server.begin();
+ 
+}
+ 
+ 
+void loop() {
+  
+  if ( millis() - last_read > 5000) { // actualizar cada 8 segundos
+    updateDHT();
+    last_read = millis();
+  }
+ 
+  listenForClients();
+ 
+}
+ 
+void updateDHT() {
+ 
+  float h = dht.readHumidity();
+  int ppm = analogRead(A0);
+  float t = dht.readTemperature();
+ 
+  if ( isnan(h) || isnan(t) ) {
+    Serial.print( F("Error de lectura en el lector DHT22!!!") );
+    return;
+  }
+ 
+  temperature = t;
+  humidity = h;
+  aire = ppm;
+  Serial.print(temperature);
+  Serial.println(humidity);
+}
+ 
+void listenForClients() {
+  EthernetClient client = server.available();
+  if (client) {
+
+    Serial.println( client.remoteIP() );
+ 
+    boolean currentLineIsBlank = true;
+    while (client.connected()) {
+      if (client.available()) {
+        char c = client.read();
+        Serial.write(c);
+ 
+        if (c == '\n' && currentLineIsBlank) {
+          client.println("HTTP/1.1 200 OK");
+          client.println("Content-Type: text/html");
+          client.println("Connection: close");
+          client.println("Refresh: 5");  
+          client.println();
+          client.println("<!DOCTYPE HTML>");
+          client.println("</HTML>");
+          client.println("<HEAD>");
+          client.println(" <meta charset='UTF-8'>");
+          client.println("<link rel='stylesheet' type='text/css' href='https://mateomtr.github.io/ardu/arduino/style.css'                                                                                                     />");
+           client.println("</HEAD>");
+           client.println("<BODY>");                      
+           client.println("  <div class='titulo'>");
+           client.println("<h1>CEILAB WEB SERVER <br><br> Calidad del aire</h1>");
+           client.println(" </div>");
+           client.println("<div class='medidas'>");
+           client.println("<span class='texto' >Temperatura: ");
+           client.print( temperature, 0 ); 
+           client.println("℃</span>");
+           client.println("<span class='texto' >Humedad Relativa: ");  
+           client.print( humidity, 0);
+           client.println("%</span>");
+           client.println(" <span class='texto' >Calidad del aire:  ");     
+           client.print( aire, 1);
+           client.println("ppm</span>");
+           client.println(" </div>");
+           client.println(" <div class='waveWrapper waveAnimation'>");
+           client.println(" <div class='waveWrapperInner bgTop'>");
+           client.println("<div class='wave waveTop' style='background-image: url('http://front-end-noobs.com/jecko/img/wave-top.png')'></div>");
+           client.println("</div>");
+           client.println(" <div class='waveWrapperInner bgMiddle'>");
+           client.println(" <div class='wave waveMiddle' style='background-image: url('http://front-end-noobs.com/jecko/img/wave-mid.png')'></div>");
+           client.println("</div>");
+           client.println("</div>");
+           client.println("</BODY>");
+            client.println("</HTML>"); 
+          break;
+        }
+ 
+        if (c == '\n') {
+          currentLineIsBlank = true;
+        } 
+        else if (c != '\r') {
+          currentLineIsBlank = false;
+        }
+      }
+    }
+    delay(1);
+ 
+    client.stop(); // cerrar la conexión
+    Serial.println("client desconectado");
+  }
+}
