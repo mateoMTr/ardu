@@ -1,4 +1,3 @@
-
 #include <SPI.h>
 #include <Ethernet.h>
 #include <Adafruit_Sensor.h>
@@ -90,15 +89,17 @@ void listenForClients() {
           client.println("HTTP/1.1 200 OK");
           client.println("Content-Type: text/html");
           client.println("Connection: close");
-          client.println("Refresh: 5");  
+          client.println("Refresh: 3");  
           client.println();
           client.println("<!DOCTYPE HTML>");
           client.println("</HTML>");
           client.println("<HEAD>");
           client.println(" <meta charset='UTF-8'>");
-          client.println("<link rel='stylesheet' type='text/css' href='https://mateomtr.github.io/ardu/arduino/style.css'                                                                                                     />");
+          client.println("<link rel='stylesheet' type='text/css' href='https://mateomtr.github.io/ardu/arduino/style.css'>");
+          client.println("<link rel='stylesheet' type='text/css' href='https://mateomtr.github.io/ardu/arduino/p.css'>");
            client.println("</HEAD>");
-           client.println("<BODY>");                      
+           client.println("<BODY>");  
+           client.println("  <div class='wrapper'> ");                   
            client.println("  <div class='titulo'>");
            client.println("<h1>CEILAB WEB SERVER <br><br> Calidad del aire</h1>");
            client.println(" </div>");
@@ -112,6 +113,12 @@ void listenForClients() {
            client.println(" <span class='texto' >Calidad del aire:  ");     
            client.print( aire, 1);
            client.println("ppm</span>");
+           client.println("<br>");
+           client.println("<h3>Calidad del aire: ");
+           if (aire > 750){client.print("Ventilar Urgente");}
+           else if(aire >499){client.print("Media");}
+           else {client.print("Buena");}  
+           client.println("</h3>");
            client.println(" </div>");
            client.println(" <div class='waveWrapper waveAnimation'>");
            client.println(" <div class='waveWrapperInner bgTop'>");
@@ -121,6 +128,7 @@ void listenForClients() {
            client.println(" <div class='wave waveMiddle' style='background-image: url('http://front-end-noobs.com/jecko/img/wave-mid.png')'></div>");
            client.println("</div>");
            client.println("</div>");
+           client.println(" </div>");
            client.println("</BODY>");
             client.println("</HTML>"); 
           break;
